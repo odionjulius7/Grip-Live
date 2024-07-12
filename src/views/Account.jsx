@@ -1,8 +1,14 @@
 import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import * as yup from "yup";
 import { useFormik } from "formik";
+import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
+import { Button, Card, Form, Container, Row, Col } from "react-bootstrap";
+import { toast } from "react-toastify";
+import CustomInput from "../components/CustomInput";
+import { createTag } from "../features/category/categorySlice";
+import { resetState } from "../features/Users/usersSlice";
+import { changePassword } from "../features/auth/authSlice";
 import "../assets/error.css";
 
 // Yup validation setting, yup doc
@@ -10,13 +16,6 @@ let schema = yup.object().shape({
   oldPassword: yup.string().required("Old Password is Required"),
   newPassword: yup.string().required("New Password is Required"),
 });
-// react-bootstrap components
-import { Button, Card, Form, Container, Row, Col } from "react-bootstrap";
-import CustomInput from "../components/CustomInput";
-import { createTag } from "../features/category/categorySlice";
-import { resetState } from "../features/Users/usersSlice";
-import { toast } from "react-toastify";
-import { changePassword } from "../features/auth/authSlice";
 
 function Account() {
   const dispatch = useDispatch();
