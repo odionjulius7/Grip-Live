@@ -1,24 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import useIsAuthenticated from "./IsAuthenticated";
+import React from "react";
+import AdminLayout from "./layouts/Admin";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import Login from "./views/Login";
 
 function App() {
+  const isAuthenticated = useIsAuthenticated();
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Switch>
+        {/* Protected Route: Only accessible when the user is logged in */}
+        <Route
+          path="/admin"
+          render={(props) =>
+            isAuthenticated ? (
+              <AdminLayout {...props} />
+            ) : (
+              <Redirect to="/login" />
+            )
+          }
+        />
+
+        {/* Login Route: Show the login page */}
+        <Route path="/login" component={Login} />
+
+        {/* Redirect to the admin dashboard if no other routes match */}
+        <Redirect from="/" to="/admin/dashboard" />
+      </Switch>
+    </BrowserRouter>
   );
 }
 
