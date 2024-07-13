@@ -18,11 +18,7 @@
 
 import Dashboard from "./views/Dashboard.js";
 import UserProfile from "./views/UserProfile.js";
-import TableList from "./views/TableList.js";
-import Typography from "./views/Typography.js";
 import Icons from "./views/Icons.js";
-import Maps from "./views/Maps.js";
-import Notifications from "./views/Notifications.js";
 import Upgrade from "./views/Upgrade.js";
 import Post from "./views/Post";
 import Users from "./views/Users";
@@ -33,6 +29,8 @@ import Account from "./views/Account";
 import Posts from "./views/Posts";
 import CreateTags from "./views/CreateTags";
 import Tags from "./views/Tags";
+import SchedulePosts from "./views/SchedulePosts.jsx";
+import PublishedPosts from "./views/PublishedPosts.jsx";
 
 const dashboardRoutes = [
   {
@@ -54,7 +52,7 @@ const dashboardRoutes = [
     // path: "/Tags",
     name: "Tags",
     icon: "nc-icon nc-badge",
-    component: CreatePost,
+    // component: CreatePost,
     layout: "/admin",
     children: [
       {
@@ -73,13 +71,50 @@ const dashboardRoutes = [
       },
     ],
   },
+  // {
+  //   path: "/posts",
+  //   name: "Post List",
+  //   icon: "nc-icon nc-notes",
+  //   component: Posts,
+  //   layout: "/admin",
+  // },
   {
-    path: "/posts",
+    // path: "/posts",
     name: "Content Management",
     icon: "nc-icon nc-notes",
-    component: Posts,
     layout: "/admin",
+    children: [
+      {
+        path: "/posts",
+        name: "Post List",
+        icon: "nc-icon nc-notes",
+        component: Posts,
+        layout: "/admin",
+      },
+      {
+        path: "/published-posts",
+        name: "Published Posts",
+        icon: "nc-icon nc-notes",
+        component: PublishedPosts,
+        layout: "/admin",
+      },
+      {
+        path: "/scheduled-posts",
+        name: "Scheduled Posts",
+        icon: "nc-icon nc-notes",
+        component: SchedulePosts,
+        layout: "/admin",
+      },
+      {
+        path: "/create-post",
+        name: "Create Post",
+        icon: "nc-icon nc-badge",
+        component: CreatePost,
+        layout: "/admin",
+      },
+    ],
   },
+
   {
     name: "User Management",
     icon: "nc-icon nc-single-02",
@@ -139,13 +174,27 @@ const dashboardRoutes = [
   },
   //
 
-  // {
-  //   path: "/unapproved-posts",
-  //   name: "Unapproved Posts",
-  //   icon: "nc-icon nc-button-play",
-  //   component: UnapprovedPosts,
-  //   layout: "/admin",
-  // },
+  {
+    path: "/posts",
+    name: "Post List",
+    icon: "nc-icon nc-notes",
+    component: Posts,
+    layout: "/admin",
+  },
+  {
+    path: "/published-posts",
+    name: "Published Post List",
+    icon: "nc-icon nc-notes",
+    component: PublishedPosts,
+    layout: "/admin",
+  },
+  {
+    path: "/scheduled-posts",
+    name: "Scheduled Post List",
+    icon: "nc-icon nc-notes",
+    component: SchedulePosts,
+    layout: "/admin",
+  },
 
   {
     path: "/create-tag",

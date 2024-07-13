@@ -56,8 +56,12 @@ function Sidebar({ color, image, routes }) {
             if (
               !prop.redirect &&
               prop.name !== "User Profile" &&
+              prop.name !== "Post List" &&
+              prop.name !== "Create Post" &&
               prop.name !== "Single Post" &&
               prop.name !== "Users" &&
+              prop.name !== "Published Post List" &&
+              prop.name !== "Scheduled Post List" &&
               prop.name !== "Creators" &&
               prop.name !== "Suspended Users" &&
               prop.name !== "Tag List" &&

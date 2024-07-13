@@ -155,7 +155,7 @@ function CreatePost() {
 
           <div className="mb-3">
             <label htmlFor="image" className="form-label">
-              Image
+              Thumbnail
             </label>
             <input
               id="image"

@@ -98,14 +98,13 @@ function Posts() {
     <>
       <Container fluid>
         <Row className="gap-3">
-          <div
-            // style={{ width: "97%" }}
+          {/* <div
             className="d-flex justify-content-end my-2"
           >
             <Link to="/admin/create-post">
               <Button>Create Post</Button>
             </Link>
-          </div>
+          </div> */}
           <div
             // style={{ width: "97%" }}
             className="d-flex justify-content-end my-2"

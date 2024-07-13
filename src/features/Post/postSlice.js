@@ -21,6 +21,28 @@ export const getPosts = createAsyncThunk(
     }
   }
 );
+export const getPubldPosts = createAsyncThunk(
+  "post/get-published-posts",
+  async (token, thunkAPI) => {
+    try {
+      return await postService.getPubldPosts(token);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+export const getSchdPosts = createAsyncThunk(
+  "post/get-scheduled-posts",
+  async (token, thunkAPI) => {
+    try {
+      return await postService.getSchdPosts(token);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+//
 export const getApprovePosts = createAsyncThunk(
   "post/get-approved-posts",
   async (items, thunkAPI) => {
@@ -191,6 +213,40 @@ export const postSlice = createSlice({
         state.message = "success";
       })
       .addCase(getPosts.rejected, (state, action) => {
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.error;
+        state.isLoading = false;
+      })
+      //
+      .addCase(getPubldPosts.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getPubldPosts.fulfilled, (state, action) => {
+        state.isError = false;
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.posts = action.payload;
+        state.message = "success";
+      })
+      .addCase(getPubldPosts.rejected, (state, action) => {
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.error;
+        state.isLoading = false;
+      })
+      //
+      .addCase(getSchdPosts.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getSchdPosts.fulfilled, (state, action) => {
+        state.isError = false;
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.posts = action.payload;
+        state.message = "success";
+      })
+      .addCase(getSchdPosts.rejected, (state, action) => {
         state.isError = true;
         state.isSuccess = false;
         state.message = action.error;

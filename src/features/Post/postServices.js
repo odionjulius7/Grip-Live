@@ -12,6 +12,19 @@ const getPosts = async (token) => {
   return response.data?.data;
 };
 
+const getPubldPosts = async (token) => {
+  const config = generateAxiosConfig(token);
+  const response = await axios.get(`${base_url}post/published`, config);
+  return response.data?.data;
+};
+
+const getSchdPosts = async (token) => {
+  const config = generateAxiosConfig(token);
+  const response = await axios.get(`${base_url}post/scheduled`, config);
+  return response.data?.data;
+};
+//
+
 const getApprovedPosts = async (items) => {
   const config = generateAxiosConfig(items.token);
   const response = await axios.get(
@@ -127,6 +140,8 @@ const postCreate = async (data) => {
 };
 //
 const postService = {
+  getPubldPosts,
+  getSchdPosts,
   postCreate,
   deletePostComment,
   getAPost,
