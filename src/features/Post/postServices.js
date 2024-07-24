@@ -11,6 +11,14 @@ const getPosts = async (token) => {
   );
   return response.data?.data;
 };
+const searchPosts = async (data1) => {
+  const config = generateAxiosConfig(data1?.token);
+  const response = await axios.get(
+    `${base_url}post/admin?title=${data1.name}&deleted=false`,
+    config
+  );
+  return response.data?.data;
+};
 
 const getPubldPosts = async (token) => {
   const config = generateAxiosConfig(token);
@@ -140,6 +148,7 @@ const postCreate = async (data) => {
 };
 //
 const postService = {
+  searchPosts,
   getPubldPosts,
   getSchdPosts,
   postCreate,

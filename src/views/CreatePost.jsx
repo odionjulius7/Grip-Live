@@ -63,6 +63,11 @@ function CreatePost() {
     dispatch(getCategories(token));
   }, [dispatch, token]);
 
+  // Get current date and time
+  let currentDate = new Date();
+  // Format the date as YYYY-MM-DDTHH:mm
+  let formattedDate = currentDate.toISOString().slice(0, 16);
+
   const formik = useFormik({
     initialValues: {
       file: null,
@@ -73,7 +78,7 @@ function CreatePost() {
       bible_book: "",
       bible_chapter: "",
       bible_verse: "",
-      published_at: "",
+      published_at: formattedDate, // Set to current date/time in ISO format
       description: "",
       is_scheduled: false,
     },

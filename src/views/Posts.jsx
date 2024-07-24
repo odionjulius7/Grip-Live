@@ -1,5 +1,5 @@
 import CustomModal from "../components/CustomModal";
-import { deletePost } from "../features/Post/postSlice";
+import { deletePost, searchPosts } from "../features/Post/postSlice";
 import { getPosts } from "../features/Post/postSlice";
 import { getApprovePosts } from "../features/Post/postSlice";
 import { resetState } from "../features/Users/usersSlice";
@@ -26,16 +26,12 @@ import { Link, useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { toast } from "react-toastify";
 
 function Posts() {
-  // user token
-  //
   const userDataToken = useSelector((state) => state.auth.user);
   const token = userDataToken?.data?.token;
-  //
   // user token
   const dispatch = useDispatch();
   const postState = useSelector((state) => state.post);
   // const history = useHistory();
-
   const { deletedPost, isSuccessDel, isSuccessStatus } = postState;
   const posts = postState?.posts;
   useEffect(() => {
@@ -45,6 +41,7 @@ function Posts() {
   }, [deletedPost]);
 
   // delete
+  const [name, setName] = useState("");
   const [open, setOpen] = useState(false);
   const [id, setId] = useState("");
   const showModal = (e) => {
@@ -72,39 +69,40 @@ function Posts() {
     dispatch(getApprovePosts(items));
   };
 
-  // Create a useEffect to watch for changes in the 'name' state while searching for post by name/title
-  // useEffect(() => {
-  //   let timer;
-  //   // Define a delay (e.g., 2000 milliseconds = 2 seconds)
-  //   const delay = 2000;
-  //   // Check if the 'name' has a value and it's not empty
-  //   if (name.trim() !== "") {
-  //     // Clear the existing timer, if any
-  //     clearTimeout(timer);
-  //     // Start a new timer to fetch data after the delay
-  //     timer = setTimeout(() => {
-  //       // Dispatch the action to fetch data using the 'name'
-  //       dispatch(getPosts(name));
-  //     }, delay);
-  //   }
+  useEffect(() => {
+    let timer;
+    // Define a delay (e.g., 2000 milliseconds = 2 seconds)
+    const delay = 2000;
+    // Check if the 'name' has a value and it's not empty
+    if (name.trim() !== "") {
+      // Clear the existing timer, if any
+      clearTimeout(timer);
+      // Start a new timer to fetch data after the delay
+      timer = setTimeout(() => {
+        // Dispatch the action to fetch data using the 'name'
+        const data1 = { name, token };
+        // console.log(data1);
+        dispatch(searchPosts(data1));
+      }, delay);
+    }
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [name, dispatch]);
 
-  //   // Clean up the timer if the component unmounts or 'name' changes
-  //   return () => {
-  //     clearTimeout(timer);
-  //   };
-  // }, [name, dispatch]);
-
+  //
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setName(value);
+  };
   return (
     <>
       <Container fluid>
         <Row className="gap-3">
-          {/* <div
-            className="d-flex justify-content-end my-2"
-          >
-            <Link to="/admin/create-post">
-              <Button>Create Post</Button>
-            </Link>
-          </div> */}
+          <div>
+            <Card.Title as="h4">All Posts</Card.Title>
+            {/* <p className="card-category">{"<<<<"} Back</p> */}
+          </div>
           <div
             // style={{ width: "97%" }}
             className="d-flex justify-content-end my-2"
@@ -112,21 +110,17 @@ function Posts() {
             <Form.Group style={{ width: "25%" }}>
               <Form.Control
                 placeholder="Search Post..."
+                name="name"
                 type="text"
+                onChange={handleChange}
               ></Form.Control>
-            </Form.Group>{" "}
+            </Form.Group>
           </div>
         </Row>
         <Row>
           <Col md="12">
             <Card className="strpied-tabled-with-hover">
               <Card.Header className="d-flex justify-content-between">
-                <div>
-                  <Card.Title as="h4">All Posts</Card.Title>
-                  {/* <p className="card-category">
-                    Here is a subtitle for this table
-                  </p> */}
-                </div>
                 <Form.Group className="p-3">
                   <Form.Select
                     // defaultValue={enqState[i].status ? enqState[i].status : "Submitted"}

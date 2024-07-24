@@ -84,6 +84,9 @@ function User() {
   return (
     <>
       <Container fluid>
+        <Row className="mb-4 pl-4">
+          <Link to="/admin/users">{"<<<"} Go Back</Link>
+        </Row>
         {/* Tab starts here */}
 
         {user?.role === "user" && (

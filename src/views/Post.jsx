@@ -99,6 +99,9 @@ function Post() {
   return (
     <>
       <Container className="" fluid>
+        <Row className="mb-4 pl-4">
+          <Link to="/admin/posts">{"<<<"} Go Back</Link>
+        </Row>
         <Row className="">
           <Col md="9">
             <Card>
