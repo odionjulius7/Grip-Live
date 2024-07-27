@@ -9,18 +9,85 @@ import {
   TextField,
   Grid,
   FormLabel,
-  Radio,
-  RadioGroup,
+  Checkbox,
+  Button,
   FormControlLabel,
 } from "@mui/material";
-import { Checkbox } from "@mui/material";
-import { Button } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { getCategories } from "../features/category/categorySlice";
 import { toast } from "react-toastify";
 import { postCreate } from "../features/Post/postSlice";
+import "./newStyle.css";
 
-// Yup validation schema
+const bibleBooks = [
+  "Genesis",
+  "Exodus",
+  "Leviticus",
+  "Numbers",
+  "Deuteronomy",
+  "Joshua",
+  "Judges",
+  "Ruth",
+  "1 Samuel",
+  "2 Samuel",
+  "1 Kings",
+  "2 Kings",
+  "1 Chronicles",
+  "2 Chronicles",
+  "Ezra",
+  "Nehemiah",
+  "Esther",
+  "Job",
+  "Psalms",
+  "Proverbs",
+  "Ecclesiastes",
+  "Song of Solomon",
+  "Isaiah",
+  "Jeremiah",
+  "Lamentations",
+  "Ezekiel",
+  "Daniel",
+  "Hosea",
+  "Joel",
+  "Amos",
+  "Obadiah",
+  "Jonah",
+  "Micah",
+  "Nahum",
+  "Habakkuk",
+  "Zephaniah",
+  "Haggai",
+  "Zechariah",
+  "Malachi",
+  "Matthew",
+  "Mark",
+  "Luke",
+  "John",
+  "Acts",
+  "Romans",
+  "1 Corinthians",
+  "2 Corinthians",
+  "Galatians",
+  "Ephesians",
+  "Philippians",
+  "Colossians",
+  "1 Thessalonians",
+  "2 Thessalonians",
+  "1 Timothy",
+  "2 Timothy",
+  "Titus",
+  "Philemon",
+  "Hebrews",
+  "James",
+  "1 Peter",
+  "2 Peter",
+  "1 John",
+  "2 John",
+  "3 John",
+  "Jude",
+  "Revelation",
+];
+
 const schema = Yup.object().shape({
   file: Yup.mixed().required("File is required"),
   image: Yup.mixed()
@@ -50,23 +117,24 @@ function CreatePost() {
   const userDataToken = useSelector((state) => state.auth.user);
   const token = userDataToken?.data?.token;
   const categoryState = useSelector((state) => state.category.category);
-
-  //
   const postState = useSelector((state) => state.post);
-  // const history = useHistory();
 
-  const { isLoading, isSuccess, posted, isError } = postState;
-
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
 
   useEffect(() => {
     dispatch(getCategories(token));
   }, [dispatch, token]);
 
-  // Get current date and time
-  let currentDate = new Date();
-  // Format the date as YYYY-MM-DDTHH:mm
-  let formattedDate = currentDate.toISOString().slice(0, 16);
+  useEffect(() => {
+    if (postState.isSuccess) {
+      toast.success("Post Created Successfully!");
+    }
+    if (postState.isError) {
+      toast.error("Something Went Wrong!");
+    }
+  }, [postState.isError, postState.isSuccess]);
 
   const formik = useFormik({
     initialValues: {
@@ -78,21 +146,16 @@ function CreatePost() {
       bible_book: "",
       bible_chapter: "",
       bible_verse: "",
-      published_at: formattedDate, // Set to current date/time in ISO format
+      published_at: new Date().toISOString().slice(0, 16),
       description: "",
       is_scheduled: false,
     },
     validationSchema: schema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
-        // console.log("Form Values:", values);
         const formData = new FormData();
-
-        // This approach allows you to handle both files as a single entity (files array)
-        // on the server-side, if your backend expects them grouped together.
         formData.append("files", values.file);
         formData.append("files", values.image);
-
         formData.append("file_type", values.file_type);
         formData.append("title", values.title);
         formData.append("category", selectedCategories.join(","));
@@ -103,16 +166,10 @@ function CreatePost() {
         formData.append("description", values.description);
         formData.append("is_scheduled", values.is_scheduled);
 
-        // Log the formData to the console
-        console.log("FormData:");
-        for (let pair of formData.entries()) {
-          console.log(pair[0] + ": " + pair[1]);
-        }
         const data = { formData, token };
         await dispatch(postCreate(data));
-        console.log("nnn", data);
         resetForm();
-        setSelectedCategories([]); // Clear selected categories after submission
+        setSelectedCategories([]);
       } catch (error) {
         console.error("Error submitting form:", error);
       } finally {
@@ -129,20 +186,33 @@ function CreatePost() {
     formik.setFieldValue("image", event.currentTarget.files[0]);
   };
 
-  const handleChange = (event) => {
-    const { value } = event.target;
+  const handleCategoryChange = (event) => {
+    const value = event.target.value;
     setSelectedCategories(value);
-    formik.setFieldValue("category", value); // Update Formik field value
+    formik.setFieldValue("category", value);
   };
 
-  useEffect(() => {
-    if (posted) {
-      toast.success("Post Created Successfully!");
+  const handleBibleBookChange = (event) => {
+    const value = event.target.value;
+    formik.setFieldValue("bible_book", value);
+
+    if (value) {
+      const filteredSuggestions = bibleBooks.filter((book) =>
+        book.toLowerCase().includes(value.toLowerCase())
+      );
+      setSuggestions(filteredSuggestions);
+      setShowSuggestions(true);
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
     }
-    if (isError) {
-      toast.error("Something Went Wrong!");
-    }
-  }, [isError, posted]);
+  };
+
+  const handleSelectBook = (book) => {
+    formik.setFieldValue("bible_book", book);
+    setSuggestions([]);
+    setShowSuggestions(false);
+  };
 
   return (
     <div className="container-fluid mt-1 mb-4 px-3">
@@ -151,10 +221,8 @@ function CreatePost() {
         <form onSubmit={formik.handleSubmit}>
           <Grid
             container
-            // spacing={2}
             className="form-grid justify-content-between bg-white py-2 px-4"
           >
-            {/* start */}
             <Grid item xs={12} sm={6}>
               <div className="my-3">
                 <label htmlFor="title" className="form-label">
@@ -190,9 +258,6 @@ function CreatePost() {
               </div>
 
               <div className="my-3">
-                {/* <label htmlFor="file_type" className="form-label">
-                  File Type
-                </label> */}
                 <select
                   id="file_type"
                   name="file_type"
@@ -217,9 +282,7 @@ function CreatePost() {
                 <textarea
                   id="description"
                   name="description"
-                  style={{
-                    height: "250px",
-                  }}
+                  style={{ height: "250px" }}
                   className="form-control"
                   rows={17}
                   onChange={formik.handleChange}
@@ -229,12 +292,7 @@ function CreatePost() {
               </div>
 
               <div className="my-3">
-                <InputLabel
-                  id="category-label"
-                  style={{
-                    fontWeight: "bold",
-                  }}
-                >
+                <InputLabel id="category-label" style={{ fontWeight: "bold" }}>
                   Add Tags
                 </InputLabel>
                 <FormControl fullWidth>
@@ -243,12 +301,9 @@ function CreatePost() {
                     name="category"
                     multiple
                     value={selectedCategories}
-                    onChange={handleChange}
+                    onChange={handleCategoryChange}
                     onBlur={formik.handleBlur}
-                    inputProps={{
-                      name: "category",
-                      id: "category",
-                    }}
+                    inputProps={{ name: "category", id: "category" }}
                     renderValue={(selected) => selected.join(", ")}
                   >
                     {categoryState?.data?.map((item, index) => (
@@ -263,7 +318,6 @@ function CreatePost() {
                 </FormControl>
               </div>
             </Grid>
-            {/* second */}
             <Grid item xs={12} sm={5}>
               <div className="my-3">
                 <label htmlFor="image" className="form-label">
@@ -281,6 +335,7 @@ function CreatePost() {
                   <div className="text-danger">{formik.errors.image}</div>
                 )}
               </div>
+
               <div className="my-3">
                 <label htmlFor="bible_book" className="form-label">
                   Bible Book
@@ -290,14 +345,25 @@ function CreatePost() {
                   name="bible_book"
                   type="text"
                   className="form-control"
-                  onChange={formik.handleChange}
+                  onChange={handleBibleBookChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.bible_book}
+                  onFocus={() => setShowSuggestions(true)}
                 />
+                {showSuggestions && suggestions.length > 0 && (
+                  <ul className="suggestions-list">
+                    {suggestions.map((book, index) => (
+                      <li key={index} onClick={() => handleSelectBook(book)}>
+                        {book}
+                      </li>
+                    ))}
+                  </ul>
+                )}
                 {formik.touched.bible_book && formik.errors.bible_book && (
                   <div className="text-danger">{formik.errors.bible_book}</div>
                 )}
               </div>
+
               <div className="my-3">
                 <label htmlFor="bible_chapter" className="form-label">
                   Bible Chapter
@@ -353,21 +419,18 @@ function CreatePost() {
 
               {formik.values.is_scheduled && (
                 <div className="my-3">
-                  <>
-                    {" "}
-                    <label htmlFor="published_at" className="form-label">
-                      Published At
-                    </label>
-                    <input
-                      id="published_at"
-                      name="published_at"
-                      type="datetime-local"
-                      className="form-control"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.published_at}
-                    />
-                  </>
+                  <label htmlFor="published_at" className="form-label">
+                    Published At
+                  </label>
+                  <input
+                    id="published_at"
+                    name="published_at"
+                    type="datetime-local"
+                    className="form-control"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.published_at}
+                  />
                 </div>
               )}
               <Grid className="mt-4">
@@ -381,25 +444,6 @@ function CreatePost() {
                 </Button>
               </Grid>
             </Grid>
-
-            {/* end */}
-
-            {/* <div>
-              <label htmlFor="description" className="form-label">
-                Description
-              </label>
-              <textarea
-                id="description"
-                name="description"
-                className="form-control"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.description}
-              />
-              {formik.touched.description && formik.errors.description && (
-                <div className="text-danger">{formik.errors.description}</div>
-              )}
-            </div> */}
           </Grid>
         </form>
       </div>
