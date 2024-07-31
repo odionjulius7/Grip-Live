@@ -193,7 +193,9 @@ function User() {
                     <span className="description">
                       {user?.email} | {user?.phone ? user?.phone : "N/A"}
                     </span>
-                    <p className="description">Date Joined: 12/09/2023</p>
+                    <p className="description">
+                      Date Joined: {moment(user?.otp_date).format("YYYY-MM-DD")}
+                    </p>
                   </div>
                   <div className="description text-center">
                     {/* <div>no of likes, no of comments, no of bookmarks</div> */}
@@ -287,17 +289,30 @@ function User() {
                     <span className="description">
                       {user?.email} | {user?.phone ? user?.phone : "N/A"}
                     </span>
-                    <p className="description">Date Joined: 12/09/2023</p>
+                    <p className="description">
+                      Date Joined: {moment(user?.otp_date).format("YYYY-MM-DD")}
+                    </p>
                   </div>
                   <div className="description text-center">
                     {/* <div>no of likes, no of comments, no of bookmarks</div> */}
-                    <span className="mx-1 text-info">likes: 10</span> |{" "}
+                    <span className="mx-1 text-info">
+                      Posts: {user?.postCount}
+                    </span>{" "}
+                    |{" "}
+                    <span className="mx-1 text-muted">
+                      Followers: {user?.followersCount}
+                    </span>{" "}
+                    |{" "}
+                    <span className="mx-1 text-warning">
+                      Following: {user?.followingCount}
+                    </span>
+                    {/* <span className="mx-1 text-info">likes: 10</span> |{" "}
                     <span className="mx-1 text-muted">comments: 15</span> |{" "}
-                    <span className="mx-1 text-warning">bookmarks: 5</span>
+                    <span className="mx-1 text-warning">bookmarks: 5</span> */}
                   </div>
                 </Card.Body>
                 <hr></hr>
-                <div className="button-container mr-auto ml-auto my-3">
+                <div className="button-container my- d-flex justify-content-center m-2">
                   {user?.role === "user" && !user?.status ? (
                     <Button
                       className="btn-outlined btn-icon"

@@ -43,6 +43,7 @@ function CreateTags() {
   useEffect(() => {
     if (createdCategory) {
       toast.success("Tag Created Successfully!");
+      history.push("/admin/tag-list");
     }
     if (isError) {
       toast.error("Something Went Wrong!");

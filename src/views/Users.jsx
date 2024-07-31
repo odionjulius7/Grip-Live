@@ -25,9 +25,11 @@ import {
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const Users = () => {
+  const history = useHistory();
   const [username, setUsername] = useState("");
   // user token
   //
@@ -187,12 +189,18 @@ const Users = () => {
                   <tbody>
                     {usersAggregate?.map((user, i) => {
                       return (
-                        <tr key={i}>
+                        <tr
+                          key={i}
+                          onClick={() => history.push(`/admin/user/${user.id}`)}
+                          style={{
+                            cursor: "pointer",
+                          }}
+                        >
                           {/* <td>{i + 1}</td> */}
                           <td>
-                            <Link to={`/admin/user/${user.id}`}>
-                              {user.username}
-                            </Link>
+                            {/* <Link to={`/admin/user/${user.id}`}> */}
+                            {user.username}
+                            {/* </Link> */}
                           </td>
                           <td>{user.email}</td>
                           <td>{!user?.phone ? "N/A" : user?.phone}</td>

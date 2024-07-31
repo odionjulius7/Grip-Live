@@ -15,6 +15,9 @@ function Tags() {
     dispatch(getCategories(token));
   }, []);
   // console.log(categoryState?.data);
+
+  // categoryState = categoryState?.set();
+
   return (
     <>
       <Container style={{ padding: "1rem 10rem" }} fluid>
@@ -34,13 +37,21 @@ function Tags() {
                     </tr>
                   </thead>
                   <tbody>
-                    {categoryState?.data?.map((category, i) => (
-                      <tr key={i}>
-                        {/* <td>1</td> */}
-                        <td>{category?.name}</td>
-                        <td>{moment(category?.createdAt).format("L")}</td>
-                      </tr>
-                    ))}
+                    {categoryState?.data
+                      ?.filter(
+                        (category, i, self) =>
+                          self.findIndex(
+                            (c) =>
+                              c.name.toLowerCase() ===
+                              category.name.toLowerCase()
+                          ) === i
+                      )
+                      .map((category, i) => (
+                        <tr key={i}>
+                          <td>{category?.name?.toUpperCase()}</td>
+                          <td>{moment(category?.createdAt).format("L")}</td>
+                        </tr>
+                      ))}
                   </tbody>
                 </Table>
               </Card.Body>
