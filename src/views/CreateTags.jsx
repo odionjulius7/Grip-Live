@@ -7,7 +7,7 @@ import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import { toast } from "react-toastify";
 
 import CustomInput from "../components/CustomInput";
-import { createTag } from "../features/category/categorySlice";
+import { createTag, getCategories } from "../features/category/categorySlice";
 import { resetState } from "../features/Users/usersSlice";
 import "../assets/error.css";
 
@@ -25,6 +25,13 @@ function CreateTags() {
   const { user } = authState.auth;
   const token = user?.data?.token;
 
+  // tag list
+  useEffect(() => {
+    dispatch(getCategories(token));
+  }, []);
+
+  // console.log(categoryState?.category?.data);
+
   // Formik state and handlers
   const formik = useFormik({
     initialValues: {
@@ -32,6 +39,13 @@ function CreateTags() {
     },
     validationSchema: schema,
     onSubmit: (values) => {
+      const existingTags = categoryState?.category?.data.map((tag) =>
+        tag.name.toLowerCase()
+      );
+      if (existingTags.includes(values.name.toLowerCase())) {
+        alert("Tag already exists");
+        return;
+      }
       const items = { name: values.name, token };
       dispatch(createTag(items));
       dispatch(resetState());

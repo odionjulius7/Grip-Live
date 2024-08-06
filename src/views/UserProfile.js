@@ -45,7 +45,7 @@ function User() {
   } = userState;
   const { postsCommentedOn, aUserPosts } = auserPostsState;
   // logged user commented posts
-  // console.log(postsCommentedOn);
+  console.log(postsCommentedOn);
 
   useEffect(() => {
     if (updatedRole) {
@@ -80,7 +80,7 @@ function User() {
   const bookmarks = userBookmarks?.filter((item) => item.userId == id);
 
   const [eventKey, setEventKey] = useState("link-0");
-  console.log(eventKey);
+  // console.log(bookmarks);
   return (
     <>
       <Container fluid>
@@ -89,50 +89,156 @@ function User() {
         </Row>
         {/* Tab starts here */}
 
-        {user?.role === "user" && (
-          <Nav className="my-4" fill variant="tabs">
-            <Nav.Item>
-              <Nav.Link
-                eventKey={"link-0"}
-                onClick={() => setEventKey("link-0")}
-                style={{
-                  backgroundColor: eventKey === "link-0" ? "#007bff" : "",
-                  color: eventKey === "link-0" ? "#fff" : "",
-                }}
-              >
-                Profile
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link
-                eventKey={"link-1"}
-                onClick={() => setEventKey("link-1")}
-                style={{
-                  backgroundColor: eventKey === "link-1" ? "#007bff" : "",
-                  color: eventKey === "link-1" ? "#fff" : "",
-                }}
-              >
-                Liked Posts
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link
-                eventKey={"link-2"}
-                onClick={() => setEventKey("link-2")}
-                style={{
-                  backgroundColor: eventKey === "link-2" ? "#007bff" : "",
-                  color: eventKey === "link-2" ? "#fff" : "",
-                }}
-              >
-                Bookmarks
-              </Nav.Link>
-            </Nav.Item>
-          </Nav>
-        )}
+        {/* {user?.role === "user" && ( */}
+        <Nav className="my-4" fill variant="tabs">
+          <Nav.Item>
+            <Nav.Link
+              eventKey={"link-0"}
+              onClick={() => setEventKey("link-0")}
+              style={{
+                backgroundColor: eventKey === "link-0" ? "#007bff" : "",
+                color: eventKey === "link-0" ? "#fff" : "",
+              }}
+            >
+              Profile
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link
+              eventKey={"link-1"}
+              onClick={() => setEventKey("link-1")}
+              style={{
+                backgroundColor: eventKey === "link-1" ? "#007bff" : "",
+                color: eventKey === "link-1" ? "#fff" : "",
+              }}
+            >
+              Liked Posts
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link
+              eventKey={"link-2"}
+              onClick={() => setEventKey("link-2")}
+              style={{
+                backgroundColor: eventKey === "link-2" ? "#007bff" : "",
+                color: eventKey === "link-2" ? "#fff" : "",
+              }}
+            >
+              Bookmarks
+            </Nav.Link>
+          </Nav.Item>
+        </Nav>
+        {/* )} */}
 
         {/* Tab ends here */}
         <Row className="px-3">
-          {user?.role === "creator" && (
+          {
+            // user?.role === "user"  &&
+            eventKey === "link-0" && (
+              <Col md="4">
+                <Card className="card-user">
+                  <div className="card-image"></div>
+                  <Card.Body>
+                    <div className="author">
+                      <a href="#" onClick={(e) => e.preventDefault()}>
+                        <img
+                          alt="..."
+                          className="avatar border-gray"
+                          src={require("../assets/img/default-avatar.png")}
+                        ></img>
+                        <h5 className="title">{user?.username}</h5>
+                      </a>
+                      <span className="description">
+                        {user?.email} | {user?.phone ? user?.phone : "N/A"}
+                      </span>
+                      <p className="description">
+                        Date Joined:{" "}
+                        {moment(user?.otp_date).format("YYYY-MM-DD")}
+                      </p>
+                    </div>
+                    <div className="description text-center">
+                      {/* <div>no of likes, no of comments, no of bookmarks</div> */}
+                      <span className="mx-1 text-info">
+                        Posts: {user?.postCount}
+                      </span>{" "}
+                      |{" "}
+                      <span className="mx-1 text-muted">
+                        Followers: {user?.followersCount}
+                      </span>{" "}
+                      |{" "}
+                      <span className="mx-1 text-warning">
+                        Following: {user?.followingCount}
+                      </span>
+                      {/* <span className="mx-1 text-info">likes: 10</span> |{" "}
+                    <span className="mx-1 text-muted">comments: 15</span> |{" "}
+                    <span className="mx-1 text-warning">bookmarks: 5</span> */}
+                    </div>
+                  </Card.Body>
+                  <hr></hr>
+                  <div className="button-container my- d-flex justify-content-center m-2">
+                    {user?.role === "user" && !user?.status ? (
+                      <Button
+                        className="btn-outlined btn-icon"
+                        // href="#"
+                        // onClick={(e) => e.preventDefault()}
+                        variant="info"
+                        onClick={() => {
+                          const ids = { id, token };
+                          dispatch(changeUserRole(ids));
+                        }}
+                      >
+                        {/* <i className="fab fa-facebook-square"></i> */}
+                        Make A Creator
+                      </Button>
+                    ) : (
+                      ""
+                    )}
+                    {user?.role === "creator" && !user?.status ? (
+                      <Button
+                        className="btn-outlined btn-icon"
+                        // href="#"
+                        onClick={() => {
+                          const ids = { id, token };
+                          dispatch(suspendAUser(ids));
+                        }}
+                        variant="warning"
+                      >
+                        {/* <i className="fab fa-twitter"></i> */}
+                        Suspend creator
+                      </Button>
+                    ) : (
+                      ""
+                    )}
+                    {user?.status ? (
+                      <Button
+                        className="btn-outlined btn-icon"
+                        // href="#"
+                        onClick={() => {
+                          const ids = { id, token };
+                          dispatch(UnsuspendAUser(ids));
+                        }}
+                        variant="warning"
+                      >
+                        {/* <i className="fab fa-twitter"></i> */}
+                        Unsuspend creator
+                      </Button>
+                    ) : (
+                      ""
+                    )}
+                    {/* <Button
+                  className="btn-outlined btn-icon"
+                  href="#"
+                  onClick={(e) => e.preventDefault()}
+                  variant="link"
+                >
+                  <i className="fab fa-google-plus-square"></i>
+                </Button> */}
+                  </div>
+                </Card>
+              </Col>
+            )
+          }
+          {user?.role === "creator" && eventKey === "link-0" && (
             <Col md="8">
               <Row>
                 <Card className="strpied-tabled-with-hover">
@@ -171,317 +277,115 @@ function User() {
               </Row>
             </Col>
           )}
-          {user?.role === "creator" && eventKey === "link-0" && (
-            <Col md="4">
-              <Card className="card-user">
-                <div className="card-image">
-                  {/* <img
-                    alt="..."
-                    src={require("assets/img/photo-1431578500526-4d9613015464.jpeg")}
-                  ></img> */}
-                </div>
-                <Card.Body>
-                  <div className="author">
-                    <a href="#" onClick={(e) => e.preventDefault()}>
-                      <img
-                        alt="..."
-                        className="avatar border-gray"
-                        src={require("../assets/img/default-avatar.png")}
-                      ></img>
-                      <h5 className="title">{user?.username}</h5>
-                    </a>
-                    <span className="description">
-                      {user?.email} | {user?.phone ? user?.phone : "N/A"}
-                    </span>
-                    <p className="description">
-                      Date Joined: {moment(user?.otp_date).format("YYYY-MM-DD")}
-                    </p>
-                  </div>
-                  <div className="description text-center">
-                    {/* <div>no of likes, no of comments, no of bookmarks</div> */}
-                    <span className="mx-1 text-info">likes: 10</span> |{" "}
-                    <span className="mx-1 text-muted">comments: 15</span> |{" "}
-                    <span className="mx-1 text-warning">bookmarks: 5</span>
-                  </div>
-                </Card.Body>
-                <hr></hr>
-                <div className="button-container mr-auto ml-auto my-3">
-                  {user?.role === "user" && !user?.status ? (
-                    <Button
-                      className="btn-outlined btn-icon"
-                      // href="#"
-                      // onClick={(e) => e.preventDefault()}
-                      variant="info"
-                      onClick={() => {
-                        const ids = { id, token };
-                        dispatch(changeUserRole(ids));
-                      }}
-                    >
-                      {/* <i className="fab fa-facebook-square"></i> */}
-                      Make A Creator
-                    </Button>
-                  ) : (
-                    ""
-                  )}
-                  {user?.role === "creator" && !user?.status ? (
-                    <Button
-                      className="btn-outlined btn-icon"
-                      // href="#"
-                      onClick={() => {
-                        const ids = { id, token };
-                        dispatch(suspendAUser(ids));
-                      }}
-                      variant="warning"
-                    >
-                      {/* <i className="fab fa-twitter"></i> */}
-                      Suspend creator
-                    </Button>
-                  ) : (
-                    ""
-                  )}
-                  {user?.status ? (
-                    <Button
-                      className="btn-outlined btn-icon"
-                      // href="#"
-                      onClick={() => {
-                        const ids = { id, token };
-                        dispatch(UnsuspendAUser(ids));
-                      }}
-                      variant="warning"
-                    >
-                      {/* <i className="fab fa-twitter"></i> */}
-                      Unsuspend creator
-                    </Button>
-                  ) : (
-                    ""
-                  )}
-                  {/* <Button
-                  className="btn-outlined btn-icon"
-                  href="#"
-                  onClick={(e) => e.preventDefault()}
-                  variant="link"
-                >
-                  <i className="fab fa-google-plus-square"></i>
-                </Button> */}
-                </div>
-              </Card>
-            </Col>
-          )}
-          {user?.role === "user" && eventKey === "link-0" && (
-            <Col md="4">
-              <Card className="card-user">
-                <div className="card-image">
-                  {/* <img
-                    alt="..."
-                    src={require("assets/img/photo-1431578500526-4d9613015464.jpeg")}
-                  ></img> */}
-                </div>
-                <Card.Body>
-                  <div className="author">
-                    <a href="#" onClick={(e) => e.preventDefault()}>
-                      <img
-                        alt="..."
-                        className="avatar border-gray"
-                        src={require("../assets/img/default-avatar.png")}
-                      ></img>
-                      <h5 className="title">{user?.username}</h5>
-                    </a>
-                    <span className="description">
-                      {user?.email} | {user?.phone ? user?.phone : "N/A"}
-                    </span>
-                    <p className="description">
-                      Date Joined: {moment(user?.otp_date).format("YYYY-MM-DD")}
-                    </p>
-                  </div>
-                  <div className="description text-center">
-                    {/* <div>no of likes, no of comments, no of bookmarks</div> */}
-                    <span className="mx-1 text-info">
-                      Posts: {user?.postCount}
-                    </span>{" "}
-                    |{" "}
-                    <span className="mx-1 text-muted">
-                      Followers: {user?.followersCount}
-                    </span>{" "}
-                    |{" "}
-                    <span className="mx-1 text-warning">
-                      Following: {user?.followingCount}
-                    </span>
-                    {/* <span className="mx-1 text-info">likes: 10</span> |{" "}
-                    <span className="mx-1 text-muted">comments: 15</span> |{" "}
-                    <span className="mx-1 text-warning">bookmarks: 5</span> */}
-                  </div>
-                </Card.Body>
-                <hr></hr>
-                <div className="button-container my- d-flex justify-content-center m-2">
-                  {user?.role === "user" && !user?.status ? (
-                    <Button
-                      className="btn-outlined btn-icon"
-                      // href="#"
-                      // onClick={(e) => e.preventDefault()}
-                      variant="info"
-                      onClick={() => {
-                        const ids = { id, token };
-                        dispatch(changeUserRole(ids));
-                      }}
-                    >
-                      {/* <i className="fab fa-facebook-square"></i> */}
-                      Make A Creator
-                    </Button>
-                  ) : (
-                    ""
-                  )}
-                  {user?.role === "creator" && !user?.status ? (
-                    <Button
-                      className="btn-outlined btn-icon"
-                      // href="#"
-                      onClick={() => {
-                        const ids = { id, token };
-                        dispatch(suspendAUser(ids));
-                      }}
-                      variant="warning"
-                    >
-                      {/* <i className="fab fa-twitter"></i> */}
-                      Suspend creator
-                    </Button>
-                  ) : (
-                    ""
-                  )}
-                  {user?.status ? (
-                    <Button
-                      className="btn-outlined btn-icon"
-                      // href="#"
-                      onClick={() => {
-                        const ids = { id, token };
-                        dispatch(UnsuspendAUser(ids));
-                      }}
-                      variant="warning"
-                    >
-                      {/* <i className="fab fa-twitter"></i> */}
-                      Unsuspend creator
-                    </Button>
-                  ) : (
-                    ""
-                  )}
-                  {/* <Button
-                  className="btn-outlined btn-icon"
-                  href="#"
-                  onClick={(e) => e.preventDefault()}
-                  variant="link"
-                >
-                  <i className="fab fa-google-plus-square"></i>
-                </Button> */}
-                </div>
-              </Card>
-            </Col>
-          )}
-          {user?.role === "user" && (
-            <Col md="12 mx-3">
-              {eventKey === "link-0" && (
-                <Row>
-                  <Card className="strpied-tabled-with-hover">
-                    <Card.Header className="d-flex justify-content-between">
-                      <div>
-                        <Card.Title as="h4">
-                          List of Posts Commented on
-                        </Card.Title>
-                      </div>
-                    </Card.Header>
-                    <Card.Body className="table-full-width table-responsive px-0">
-                      <Table className="table-hover table-striped">
-                        <thead>
-                          <tr>
-                            <th className="border-0">Title</th>
-                            <th className="border-0">Author</th>
-                            <th className="border-0">comment</th>
-                            <th className="border-0">Date</th>
+
+          {/* {user?.role === "user" && ( */}
+          <Col md="12 mx-3">
+            {eventKey === "link-0" && (
+              <Row>
+                <Card className="strpied-tabled-with-hover">
+                  <Card.Header className="d-flex justify-content-between">
+                    <div>
+                      <Card.Title as="h4">
+                        List of Posts Commented on
+                      </Card.Title>
+                    </div>
+                  </Card.Header>
+                  <Card.Body className="table-full-width table-responsive px-0">
+                    <Table className="table-hover table-striped">
+                      <thead>
+                        <tr>
+                          <th className="border-0">Title</th>
+                          <th className="border-0">Author</th>
+                          <th className="border-0">comment</th>
+                          <th className="border-0">Date</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            <Link to={`/admin/post/21`}>
+                              Post Title one of September
+                            </Link>
+                          </td>
+                          <td>Dakota Joe</td>
+                          <td>
+                            Lorem ipsum dolor sit amet consectetur adipisicing
+                            elit. Maxime mollitia, amet consectetur adipisicing
+                            elit.
+                          </td>
+                          <td>25/09/2023</td>
+                        </tr>
+                      </tbody>
+                    </Table>
+                  </Card.Body>
+                </Card>
+              </Row>
+            )}
+            {eventKey === "link-1" && (
+              <Row>
+                <Card className="strpied-tabled-with-hover mr-3">
+                  <Card.Header className="d-flex justify-content-between">
+                    <div>
+                      <Card.Title as="h4">All Liked Posts</Card.Title>
+                    </div>
+                  </Card.Header>
+                  <Card.Body className="table-full-width table-responsive px-0">
+                    <Table className="table-hover table-striped">
+                      <thead>
+                        <tr>
+                          <th className="border-0">Title</th>
+                          <th className="border-0">Author</th>
+                          <th className="border-0">Date</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Niger</td>
+                          <td>Dakota Rice</td>
+                          <td>Dakota Rice</td>
+                        </tr>
+                        <tr>
+                          <td>Niger</td>
+                          <td>Dakota Rice</td>
+                          <td>Dakota Rice</td>
+                        </tr>
+                      </tbody>
+                    </Table>
+                  </Card.Body>
+                </Card>
+              </Row>
+            )}
+            {eventKey === "link-2" && (
+              <Row>
+                <Card className="strpied-tabled-with-hover">
+                  <Card.Header className="d-flex justify-content-between">
+                    <div>
+                      <Card.Title as="h4">List of bookmarks</Card.Title>
+                    </div>
+                  </Card.Header>
+                  <Card.Body className="table-full-width table-responsive px-0">
+                    <Table className="table-hover table-striped">
+                      <thead>
+                        <tr>
+                          <th className="border-0">Title</th>
+                          <th className="border-0">Date</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {bookmarks?.map((item, i) => (
+                          <tr key={i}>
+                            <td>{item?.post?.title}</td>
+                            <td>{moment(item?.createdAt).format("L")}</td>
                           </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>
-                              <Link to={`/admin/post/21`}>
-                                Post Title one of September
-                              </Link>
-                            </td>
-                            <td>Dakota Joe</td>
-                            <td>
-                              Lorem ipsum dolor sit amet consectetur adipisicing
-                              elit. Maxime mollitia, amet consectetur
-                              adipisicing elit.
-                            </td>
-                            <td>25/09/2023</td>
-                          </tr>
-                        </tbody>
-                      </Table>
-                    </Card.Body>
-                  </Card>
-                </Row>
-              )}
-              {eventKey === "link-1" && (
-                <Row>
-                  <Card className="strpied-tabled-with-hover mr-3">
-                    <Card.Header className="d-flex justify-content-between">
-                      <div>
-                        <Card.Title as="h4">All Liked Posts</Card.Title>
-                      </div>
-                    </Card.Header>
-                    <Card.Body className="table-full-width table-responsive px-0">
-                      <Table className="table-hover table-striped">
-                        <thead>
-                          <tr>
-                            <th className="border-0">Title</th>
-                            <th className="border-0">Author</th>
-                            <th className="border-0">Date</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>Niger</td>
-                            <td>Dakota Rice</td>
-                            <td>Dakota Rice</td>
-                          </tr>
-                          <tr>
-                            <td>Niger</td>
-                            <td>Dakota Rice</td>
-                            <td>Dakota Rice</td>
-                          </tr>
-                        </tbody>
-                      </Table>
-                    </Card.Body>
-                  </Card>
-                </Row>
-              )}
-              {eventKey === "link-2" && (
-                <Row>
-                  <Card className="strpied-tabled-with-hover">
-                    <Card.Header className="d-flex justify-content-between">
-                      <div>
-                        <Card.Title as="h4">List of bookmarks</Card.Title>
-                      </div>
-                    </Card.Header>
-                    <Card.Body className="table-full-width table-responsive px-0">
-                      <Table className="table-hover table-striped">
-                        <thead>
-                          <tr>
-                            <th className="border-0">Title</th>
-                            <th className="border-0">Date</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {bookmarks?.map((item, i) => (
-                            <tr key={i}>
-                              <td>{item?.post?.title}</td>
-                              <td>{moment(item?.createdAt).format("L")}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Card.Body>
-                  </Card>
-                </Row>
-              )}
-            </Col>
-          )}
+                        ))}
+                      </tbody>
+                    </Table>
+                  </Card.Body>
+                </Card>
+              </Row>
+            )}
+          </Col>
+          {/*  )} */}
         </Row>
       </Container>
     </>
@@ -491,132 +395,87 @@ function User() {
 export default User;
 
 {
-  /* <Card>
-              <Card.Body>
-                <Form>
-                  <Row>
-                    <Col className="pr-1" md="5">
-                      <Form.Group>
-                        <label>Company (disabled)</label>
-                        <Form.Control
-                          defaultValue="Creative Code Inc."
-                          disabled
-                          placeholder="Company"
-                          type="text"
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                    <Col className="px-1" md="3">
-                      <Form.Group>
-                        <label>Username</label>
-                        <Form.Control
-                          defaultValue="michael23"
-                          placeholder="Username"
-                          type="text"
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                    <Col className="pl-1" md="4">
-                      <Form.Group>
-                        <label htmlFor="exampleInputEmail1">
-                          Email address
-                        </label>
-                        <Form.Control
-                          placeholder="Email"
-                          type="email"
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col className="pr-1" md="6">
-                      <Form.Group>
-                        <label>First Name</label>
-                        <Form.Control
-                          defaultValue="Mike"
-                          placeholder="Company"
-                          type="text"
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                    <Col className="pl-1" md="6">
-                      <Form.Group>
-                        <label>Last Name</label>
-                        <Form.Control
-                          defaultValue="Andrew"
-                          placeholder="Last Name"
-                          type="text"
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col md="12">
-                      <Form.Group>
-                        <label>Address</label>
-                        <Form.Control
-                          defaultValue="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09"
-                          placeholder="Home Address"
-                          type="text"
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col className="pr-1" md="4">
-                      <Form.Group>
-                        <label>City</label>
-                        <Form.Control
-                          defaultValue="Mike"
-                          placeholder="City"
-                          type="text"
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                    <Col className="px-1" md="4">
-                      <Form.Group>
-                        <label>Country</label>
-                        <Form.Control
-                          defaultValue="Andrew"
-                          placeholder="Country"
-                          type="text"
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                    <Col className="pl-1" md="4">
-                      <Form.Group>
-                        <label>Postal Code</label>
-                        <Form.Control
-                          placeholder="ZIP Code"
-                          type="number"
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col md="12">
-                      <Form.Group>
-                        <label>About Me</label>
-                        <Form.Control
-                          cols="80"
-                          defaultValue="Lamborghini Mercy, Your chick she so thirsty, I'm in
-                          that two seat Lambo."
-                          placeholder="Here can be your description"
-                          rows="4"
-                          as="textarea"
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                  <Button
-                    className="btn-fill pull-right"
-                    type="submit"
-                    variant="info"
-                  >
-                    Update Profile
-                  </Button>
-                  <div className="clearfix"></div>
-                </Form>
-              </Card.Body>
-            </Card> */
+  /*
+  {
+    user?.role === "creator" && eventKey === "link-0" && (
+      <Col md="4">
+        <Card className="card-user">
+          <div className="card-image"></div>
+          <Card.Body>
+            <div className="author">
+              <a href="#" onClick={(e) => e.preventDefault()}>
+                <img
+                  alt="..."
+                  className="avatar border-gray"
+                  src={require("../assets/img/default-avatar.png")}
+                ></img>
+                <h5 className="title">{user?.username}</h5>
+              </a>
+              <span className="description">
+                {user?.email} | {user?.phone ? user?.phone : "N/A"}
+              </span>
+              <p className="description">
+                Date Joined: {moment(user?.otp_date).format("YYYY-MM-DD")}
+              </p>
+            </div>
+            <div className="description text-center">
+              <span className="mx-1 text-info">likes: 10</span> |{" "}
+              <span className="mx-1 text-muted">comments: 15</span> |{" "}
+              <span className="mx-1 text-warning">bookmarks: 5</span>
+            </div>
+          </Card.Body>
+          <hr></hr>
+          <div className="button-container mr-auto ml-auto my-3">
+            {user?.role === "user" && !user?.status ? (
+              <Button
+                className="btn-outlined btn-icon"
+                // href="#"
+                // onClick={(e) => e.preventDefault()}
+                variant="info"
+                onClick={() => {
+                  const ids = { id, token };
+                  dispatch(changeUserRole(ids));
+                }}
+              >
+                Make A Creator
+              </Button>
+            ) : (
+              ""
+            )}
+            {user?.role === "creator" && !user?.status ? (
+              <Button
+                className="btn-outlined btn-icon"
+                // href="#"
+                onClick={() => {
+                  const ids = { id, token };
+                  dispatch(suspendAUser(ids));
+                }}
+                variant="warning"
+              >
+                Suspend creator
+              </Button>
+            ) : (
+              ""
+            )}
+            {user?.status ? (
+              <Button
+                className="btn-outlined btn-icon"
+                // href="#"
+                onClick={() => {
+                  const ids = { id, token };
+                  dispatch(UnsuspendAUser(ids));
+                }}
+                variant="warning"
+              >
+                Unsuspend creator
+              </Button>
+            ) : (
+              ""
+            )}
+          </div>
+        </Card>
+      </Col>
+    );
+  }
+*/
 }

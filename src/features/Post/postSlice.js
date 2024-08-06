@@ -9,6 +9,7 @@ const initialState = {
   isLoading: false,
   isSuccess: false,
   message: "",
+  isSuccess100: false,
 };
 
 export const getPosts = createAsyncThunk(
@@ -203,13 +204,13 @@ export const postSlice = createSlice({
       .addCase(postCreate.fulfilled, (state, action) => {
         state.isError = false;
         state.isLoading = false;
-        state.isSuccess = true;
+        state.isSuccess100 = true;
         state.posted = action.payload;
         state.message = "success";
       })
       .addCase(postCreate.rejected, (state, action) => {
         state.isError = true;
-        state.isSuccess = false;
+        state.isSuccess100 = false;
         state.message = action.error;
         state.isLoading = false;
       })

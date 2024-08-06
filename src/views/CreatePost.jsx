@@ -128,13 +128,13 @@ function CreatePost() {
   }, [dispatch, token]);
 
   useEffect(() => {
-    if (postState.isSuccess) {
+    if (postState.isSuccess100) {
       toast.success("Post Created Successfully!");
     }
     if (postState.isError) {
       toast.error("Something Went Wrong!");
     }
-  }, [postState.isError, postState.isSuccess]);
+  }, [postState.isError, postState.isSuccess100]);
 
   const formik = useFormik({
     initialValues: {
@@ -306,11 +306,20 @@ function CreatePost() {
                     inputProps={{ name: "category", id: "category" }}
                     renderValue={(selected) => selected.join(", ")}
                   >
-                    {categoryState?.data?.map((item, index) => (
-                      <MenuItem key={index} value={item?.name}>
-                        {item?.name}
-                      </MenuItem>
-                    ))}
+                    {categoryState?.data
+                      ?.filter(
+                        (category, i, self) =>
+                          self.findIndex(
+                            (c) =>
+                              c.name.toLowerCase() ===
+                              category.name.toLowerCase()
+                          ) === i
+                      )
+                      .map((item, index) => (
+                        <MenuItem key={index} value={item?.name}>
+                          {item?.name?.toLowerCase()}
+                        </MenuItem>
+                      ))}
                   </Select>
                   {formik.touched.category && formik.errors.category && (
                     <div className="text-danger">{formik.errors.category}</div>
