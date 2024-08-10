@@ -133,7 +133,7 @@ function SchedulePosts() {
                       <th className="border-0">Bible Ref</th>
                       <th className="border-0">Date Posted</th>
                       <th className="border-0">Status</th>
-                      <th className="border-0">Delete</th>
+                      {/* <th className="border-0">Delete</th> */}
                     </tr>
                   </thead>
                   <tbody>
@@ -159,7 +159,7 @@ function SchedulePosts() {
                               </span>
                             )}
                           </td>
-                          <td>
+                          {/* <td>
                             <OverlayTrigger
                               overlay={
                                 <Tooltip id="tooltip-119603706">
@@ -179,7 +179,7 @@ function SchedulePosts() {
                                 ></i>
                               </Button>
                             </OverlayTrigger>
-                          </td>
+                          </td> */}
                         </tr>
                       );
                     })}

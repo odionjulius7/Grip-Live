@@ -82,6 +82,7 @@ const suspendAUser = async (ids) => {
     return null;
   }
 };
+
 const UnsuspendAUser = async (ids) => {
   const config = generateAxiosConfig(ids.token);
   try {
@@ -112,9 +113,13 @@ const getDailyUsers = async (token) => {
   return response.data?.data;
 };
 
-const getUserBookmarks = async (token) => {
-  const config = generateAxiosConfig(token);
-  const response = await axios.get(`${base_url}bookmark/admin`, config);
+const getUserBookmarks = async (ids) => {
+  const config = generateAxiosConfig(ids?.token);
+  // const response = await axios.get(`${base_url}bookmark/admin`, config);
+  const response = await axios.get(
+    `${base_url}user/bookmarks/${ids?.id}`,
+    config
+  );
 
   return response.data?.data;
 };
@@ -141,8 +146,18 @@ const getUsersByTopics = async (items) => {
   // console.log(response);
   return response.data?.data;
 };
+//
+
+const getUserLikes = async (ids) => {
+  const config = generateAxiosConfig(ids.token);
+  const response = await axios.get(`${base_url}user/likes/${ids?.id}`, config);
+  // console.log(response);
+  return response.data?.data;
+};
 
 const usersService = {
+  // getUserComments,
+  getUserLikes,
   getUsers,
   getUsersAggregate,
   getAUser,

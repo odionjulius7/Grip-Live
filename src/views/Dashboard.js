@@ -71,7 +71,13 @@ function Dashboard() {
       <Container fluid>
         <Row>
           <Col lg="3" sm="6">
-            <Card className="card-stats">
+            <Card
+              className="card-stats"
+              style={{
+                cursor: "pointer",
+              }}
+              onClick={() => history.push("/admin/scheduled-posts")}
+            >
               <Card.Body>
                 <Row>
                   <Col xs="5">
@@ -89,11 +95,7 @@ function Dashboard() {
               </Card.Body>
               <Card.Footer>
                 <hr></hr>
-                <div
-                  className="stats"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => history.push("/admin/posts")}
-                >
+                <div className="stats" style={{ cursor: "pointer" }}>
                   <i className="fas fa-redo mr-1"></i>
                   Check Now
                 </div>
@@ -101,7 +103,13 @@ function Dashboard() {
             </Card>
           </Col>
           <Col lg="3" sm="6">
-            <Card className="card-stats">
+            <Card
+              className="card-stats"
+              style={{
+                cursor: "pointer",
+              }}
+              onClick={() => history.push("/admin/creators")}
+            >
               <Card.Body>
                 <Row>
                   <Col xs="5">
@@ -127,7 +135,13 @@ function Dashboard() {
             </Card>
           </Col>
           <Col lg="3" sm="6">
-            <Card className="card-stats">
+            <Card
+              className="card-stats"
+              style={{
+                cursor: "pointer",
+              }}
+              onClick={() => history.push("/admin/users")}
+            >
               <Card.Body>
                 <Row>
                   <Col xs="5">
@@ -155,7 +169,13 @@ function Dashboard() {
             </Card>
           </Col>
           <Col lg="3" sm="6">
-            <Card className="card-stats">
+            <Card
+              className="card-stats"
+              style={{
+                cursor: "pointer",
+              }}
+              onClick={() => history.push("/admin/posts")}
+            >
               <Card.Body>
                 <Row>
                   <Col xs="5">

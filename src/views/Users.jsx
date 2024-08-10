@@ -10,11 +10,8 @@ import React, { useEffect, useState } from "react";
 
 // react-bootstrap components
 import {
-  Badge,
   Button,
   Card,
-  Navbar,
-  Nav,
   Table,
   Container,
   Row,
@@ -24,9 +21,9 @@ import {
   Form,
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
+// import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import { useHistory } from "react-router-dom";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 const Users = () => {
   const history = useHistory();
@@ -254,7 +251,13 @@ const Users = () => {
               <Button
                 onClick={() => setNum((prev) => prev + 1)}
                 className="m-1"
-                disabled={data2?.length === 0}
+                disabled={usersAggregate?.length === 0}
+                // disabled={
+                //   usersAggregate?.length >= 10 &&
+                //   data2?.length > 0 &&
+                //   usersAggregate[usersAggregate?.length - 1]?.id ===
+                //     data2[data2?.length - 1]?.id
+                // }
               >
                 Next
               </Button>

@@ -6,14 +6,13 @@ import { Button, Card, Container, Row, Col, Table, Nav } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom/cjs/react-router-dom.min";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { changeUserRole } from "../features/Users/usersSlice";
+import { changeUserRole, getUserLikes } from "../features/Users/usersSlice";
 import { resetState } from "../features/Users/usersSlice";
 import { getAUser } from "../features/Users/usersSlice";
 import { getAUserPosts } from "../features/Post/postSlice";
 import { suspendAUser } from "../features/Users/usersSlice";
 import { UnsuspendAUser } from "../features/Users/usersSlice";
 
-import SVG from "../assets/img/SVGImg.png";
 import { getUserBookmarks } from "../features/Users/usersSlice";
 import { getPostsCommented } from "../features/Post/postSlice";
 
@@ -22,11 +21,8 @@ function User() {
   const userDataToken = useSelector((state) => state.auth.user);
   const token = userDataToken?.data?.token;
   //
-  // const user = false;
-  // const creator = true;
   const location = useLocation();
   const id = location.pathname.split("/")[3];
-  // console.log(id);
 
   // Prev
   const dispatch = useDispatch();
@@ -36,16 +32,17 @@ function User() {
   const {
     isSuccess,
     isError,
-    isLoading,
     user,
     updatedRole,
     suspendAU,
     unSuspendAU,
     userBookmarks,
   } = userState;
-  const { postsCommentedOn, aUserPosts } = auserPostsState;
-  // logged user commented posts
-  console.log(postsCommentedOn);
+  const { aUserPosts } = auserPostsState;
+  // both below have empty array
+  // console.log(auserPostsState?.postsCommentedOn);
+  // console.log(userState?.userLikes);
+  console.log(userState?.userBookmarks);
 
   useEffect(() => {
     if (updatedRole) {
@@ -73,7 +70,8 @@ function User() {
   useEffect(() => {
     const ids = { id, token };
     dispatch(getPostsCommented(ids));
-    dispatch(getUserBookmarks(token));
+    dispatch(getUserLikes(ids));
+    dispatch(getUserBookmarks(ids));
     dispatch(getAUserPosts(ids));
   }, [id]);
 
@@ -301,20 +299,23 @@ function User() {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>
-                            <Link to={`/admin/post/21`}>
-                              Post Title one of September
-                            </Link>
-                          </td>
-                          <td>Dakota Joe</td>
-                          <td>
-                            Lorem ipsum dolor sit amet consectetur adipisicing
-                            elit. Maxime mollitia, amet consectetur adipisicing
-                            elit.
-                          </td>
-                          <td>25/09/2023</td>
-                        </tr>
+                        {auserPostsState?.postsCommentedOn &&
+                          auserPostsState?.postsCommentedOn.length > 0 && (
+                            <tr>
+                              <td>
+                                <Link to={`/admin/post/21`}>
+                                  Post Title one of September
+                                </Link>
+                              </td>
+                              <td>Dakota Joe</td>
+                              <td>
+                                Lorem ipsum dolor sit amet consectetur
+                                adipisicing elit. Maxime mollitia, amet
+                                consectetur adipisicing elit.
+                              </td>
+                              <td>25/09/2023</td>
+                            </tr>
+                          )}
                       </tbody>
                     </Table>
                   </Card.Body>
@@ -339,16 +340,14 @@ function User() {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>Niger</td>
-                          <td>Dakota Rice</td>
-                          <td>Dakota Rice</td>
-                        </tr>
-                        <tr>
-                          <td>Niger</td>
-                          <td>Dakota Rice</td>
-                          <td>Dakota Rice</td>
-                        </tr>
+                        {userState?.userLikes &&
+                          userState?.userLikes.length > 0 && (
+                            <tr>
+                              <td>Niger</td>
+                              <td>Dakota Rice</td>
+                              <td>Dakota Rice</td>
+                            </tr>
+                          )}
                       </tbody>
                     </Table>
                   </Card.Body>
@@ -372,7 +371,7 @@ function User() {
                         </tr>
                       </thead>
                       <tbody>
-                        {bookmarks?.map((item, i) => (
+                        {userState?.userBookmarks?.map((item, i) => (
                           <tr key={i}>
                             <td>{item?.post?.title}</td>
                             <td>{moment(item?.createdAt).format("L")}</td>

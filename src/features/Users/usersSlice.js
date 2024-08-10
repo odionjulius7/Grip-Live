@@ -102,9 +102,9 @@ export const getDailyUsers = createAsyncThunk(
 //
 export const getUserBookmarks = createAsyncThunk(
   "users/get-user-bookmarks",
-  async (token, thunkAPI) => {
+  async (ids, thunkAPI) => {
     try {
-      return await usersService.getUserBookmarks(token);
+      return await usersService.getUserBookmarks(ids);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -127,6 +127,17 @@ export const getAUser = createAsyncThunk(
   async (ids, thunkAPI) => {
     try {
       return await usersService.getAUser(ids);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+//
+export const getUserLikes = createAsyncThunk(
+  "user/get-user-likes",
+  async (ids, thunkAPI) => {
+    try {
+      return await usersService.getUserLikes(ids);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -407,6 +418,22 @@ export const usersSlice = createSlice({
         state.message = "success";
       })
       .addCase(getUserBookmarks.rejected, (state, action) => {
+        state.isError = true;
+        state.isSuccessRole = false;
+        state.message = action.error;
+        state.isLoading = false;
+      })
+      .addCase(getUserLikes.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getUserLikes.fulfilled, (state, action) => {
+        state.isError = false;
+        state.isLoading = false;
+        state.isSuccessRole = true;
+        state.userLikes = action.payload;
+        state.message = "success";
+      })
+      .addCase(getUserLikes.rejected, (state, action) => {
         state.isError = true;
         state.isSuccessRole = false;
         state.message = action.error;

@@ -137,7 +137,7 @@ function PublishedPosts() {
                       <th className="border-0">Bible Ref</th>
                       <th className="border-0">Published At</th>
                       <th className="border-0">Status</th>
-                      <th className="border-0">Delete</th>
+                      {/* <th className="border-0">Delete</th> */}
                     </tr>
                   </thead>
                   <tbody>
@@ -163,7 +163,7 @@ function PublishedPosts() {
                               </span>
                             )}
                           </td>
-                          <td>
+                          {/* <td>
                             <OverlayTrigger
                               overlay={
                                 <Tooltip id="tooltip-119603706">
@@ -183,7 +183,7 @@ function PublishedPosts() {
                                 ></i>
                               </Button>
                             </OverlayTrigger>
-                          </td>
+                          </td> */}
                         </tr>
                       );
                     })}
